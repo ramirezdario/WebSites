@@ -1,0 +1,80 @@
+﻿@{
+    var GameName = "";
+    DateTime ReleaseDate = DateTime.UtcNow;
+    var mTitle = "";
+    var mDescription = "";
+    var Text = "";
+
+    if (IsPost)
+    {
+        GameName = Request["GameName"];
+        mTitle = Request["mTitle"];
+        mDescription = Request["mDescription"];
+        Text = Request.Unvalidated("Text");
+
+        Validation.RequireFields("GameName", "mTitle", "mDescription", "Text");
+
+        var SQLINSERT = "INSERT INTO Games (GameName, ReleaseDate, mTitle, mDescription, Text) VALUES (@0, @1, @2, @3, @4)";
+
+        if (Validation.IsValid())
+        {
+            try
+            {
+                var db = Database.Open("conn");
+                db.Execute(SQLINSERT, GameName, ReleaseDate, mTitle, mDescription, Text);
+                Response.Write("Data Saved!");
+            }
+            catch (Exception ex)
+            {
+                Response.Write(ex.Message);
+            }
+        }
+
+    }
+
+}
+
+
+   
+        
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+    </head>
+    <body>
+        <form method="post">
+            <fieldset>
+                <legend>Insert Data</legend>
+                @Html.ValidationSummary(true)
+                <div>
+                    <label>Game Name</label>
+                    <input type="text" value="@GameName" name="GameName" />
+                    @Html.ValidationMessage("GameName")
+                </div>
+
+                <div>
+                    <label>Meta Title</label>
+                    <input type="text" value="@mTitle" name="mTitle" />
+                    @Html.ValidationMessage("mTitle")
+                </div>
+
+                <div>
+                    <label>Meta Description</label>
+                    <input type="text" value="@mDescription" name="mDescription" />
+                    @Html.ValidationMessage("mDescription")
+                </div>
+
+
+                <div>
+                    <label>Text</label>
+                    <textarea class="ckeditor" name="Text">@Text</textarea>
+                    @Html.ValidationMessage("Text")
+                </div>
+
+                <input type="submit" />
+            </fieldset>
+
+        </form>
+    </body>
+</html>

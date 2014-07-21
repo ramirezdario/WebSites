@@ -1,0 +1,97 @@
+﻿1.Elegir un tema
+2.usar formularios
+3.de acuerdo al tema, solicitar los datos
+4.insertar los datos en una BD
+5.consultar estos datos en una lista
+6.Modificar los datos.
+7.eliminar los datos.
+
+
+
+@*//INGRESO DE DATOS*@
+@*@{
+    if (IsPost)
+    {
+        string companyname = Request.Form["companyname"];
+        string contactname = Request.Form["contactname"];
+        int employeecount = Request.Form["employees"].AsInt();
+
+        <text>
+            You entered: <br />
+            Company Name: @companyname <br />
+            Contact Name: @contactname <br />
+            Employee Count: @employeecount <br />
+        </text>
+    }
+*@
+
+
+@*VALIDACION DE DATOS INGRESADOS*@
+@{
+  //VALIDAR QUE EL CAMPO NOMBRE DE EMPRESA NO ESTE VACIO
+    Validation.RequireField("companyname", "Nombre de la empresa es obligatorio");
+    //VALIDAR QUE EL CAMPO NOMBRE DE EMPLEADO NO ESTE VACIO
+    Validation.RequireField("contactname", "complete el nombre del empleado");
+    //VALIDAR QUE EL CAMPO NRO DE EMPLEADO NO ESTE VACIO
+    Validation.RequireField("employees", "Nro de empleado es obligatorio");
+    //VALIDAR QUE EL CAMPO NRO DE EMPLEADO SEA ENTERO
+    Validation.Add("employees", Validator.Integer());    
+    
+    //SI ES POST INGRESA EN EL IF
+    if (IsPost )
+    {
+        //SE DECLARAN LAS VARIABLES Y SE LES ASIGNA LOS VALORES INGRESADOS EN EL TEXTBOX
+        var companyname = Request.Form["companyname"];
+        var contactname = Request.Form["contactname"];
+        var employeecount = Request.Form["employees"];        
+        //SI SE INGRESO CORRECTAMENTE LOS DATOS EL RESULTADO ES TRUE E INGRESA EN EL IF
+        if (Validation.IsValid())
+        {
+            <text>
+                You entered: <br />
+                Company Name: @companyname <br />
+                Contact Name: @contactname <br />
+                Employee Count: @employeecount <br />
+            </text>
+        }
+    }
+}
+
+
+
+ 
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Form</title>
+</head>
+<body>
+    <form method="post">
+        <fieldset>
+            <legend>Add Customer</legend>
+            <div>
+                <label for="CompanyName">Company Name:</label>
+                <input type="text" name="CompanyName" value="@Request.Form["companyname"]" />
+                @Html.ValidationMessage("companyname")
+            </div>
+            <div>
+                <label for="ContactName">Contact Name:</label>
+                <input type="text" name="ContactName" value="@Request.Form["contactname"]" />
+                @Html.ValidationMessage("contactname")
+            </div>
+            <div>
+                <label for="Employees">Employee Count:</label>
+                <input type="text" name="Employees" value="@Request.Form["employees"]" />
+                @Html.ValidationMessage("employees")
+            </div>
+            <div>
+                <label>&nbsp;</label>
+                <input type="submit" value="Submit" class="submit" />
+            </div>
+        </fieldset>
+    </form>
+</body>
+</html>
